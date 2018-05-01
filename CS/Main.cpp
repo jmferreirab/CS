@@ -15,7 +15,9 @@ using namespace std;
 
 int main() {
 
-	ArrayBST<LinkedList<string>> arr;
+	//ArrayBST<LinkedList<string>> arr;
+	ArrayBST<string> arr(13);
+
 
 	LinkedList<string> l;
 	l.add_end("2323");
@@ -23,15 +25,23 @@ int main() {
 	l.add_end("2323");
 	l.add_end("2323");
 
-	arr.insert(1, l);
-	arr.insert(2, l);
-	arr.insert(3, l);
-	arr.insert(4, l);
+	arr.insert(10, "A");
+	arr.insert(5, "B");
+	arr.insert(13, "C");
+	arr.insert(4, "D");
 
-	string s = arr.tree[1].data.get(3);
-	cout << s;
-	arr.tree[1].data.remove_last();
+	//string s = arr.tree[1].data.get(3);
+	//cout << s;
+	//arr.tree[1].data.remove_last();
 	
+	
+
+	string s = arr.left(*arr.left(arr.tree[1]))->data;
+
+
+	cout << s;
+	//arr.tree[1].data.remove_last();
+
 	cout << "\nDemostracion de Arbol Binario de Busqueda.\n\n";
 
 	BST<string> bbb;
