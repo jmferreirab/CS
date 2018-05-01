@@ -1,0 +1,45 @@
+Cada receta con un nombre
+
+
+Preparacion
+
+y lista con ingredienntes
+
+
+
+nombre 
+cantidad de unidades
+medida las unidades 
+
+
+
+
+Crear un main que permita tener un menu...
+
+1. buscar receta determinada por nombre receta   -> paso a paso con ingredientes
+
+2. buscar recetas dado un ingrediente -> solo nombre 
+
+
+struct ingrediente{
+	string nombre
+	float cant
+	string medida
+}
+
+struct receta{
+	string nombre
+	string preparacion
+	lista<ingrediente> ing;
+}
+
+En el main hay:
+
+List<Receta> menu;
+viernes 12pm
+
+
+lista ordenadas alfabeticamente por nombre
+o por careraa o por hobby
+
+Si se elije, por carrera debe mostrar la seleccion de carerra y ahi si desplegar
