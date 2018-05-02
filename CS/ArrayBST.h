@@ -21,17 +21,15 @@ class ArrayBST {
 		int rChild = 0;
 	};
 
-
-
-
-public:
-
 	//Fields
 	TreeNode<T> * tree;
 	int boundSize;
 
-	ArrayBST(int capacity = 14) {
-		boundSize = capacity+1;
+
+public:
+
+	ArrayBST(int capacity = 9) {
+		boundSize = capacity + 1;
 
 		tree = new TreeNode<T>[boundSize];
 
@@ -44,8 +42,10 @@ public:
 
 	}
 
+	TreeNode<T>* getTree() const{
+		return tree;
+	}
 
-	
 
 	void insert(int key, T data) {
 
@@ -68,7 +68,7 @@ public:
 		while (nextNode != &tree[0]) {						//As long as we haven't returned to the sentinel
 			if (key == nextNode->key) {						//If same key, overwrite data.
 				nextNode->data = data;
-				return;			
+				return;
 			}
 			trailingNode = nextNode;
 			if (key < nextNode->key) {
@@ -87,7 +87,7 @@ public:
 		tree[tree[0].rChild].key = key;
 		tree[tree[0].rChild].data = data;
 		tree[tree[0].rChild].lChild = tree[tree[0].rChild].rChild = 0;
-	
+
 		// Update parent in traversal to link to the added node
 		if (side == 0) trailingNode->lChild = tree[0].rChild;
 		else if (side == 1) trailingNode->rChild = tree[0].rChild;
@@ -96,22 +96,22 @@ public:
 		// Increment "free" index
 		if (freeIndex != 0) tree[0].rChild = freeIndex;
 		else ++tree[0].rChild;
-		
+
 
 	}
 
 	//Get node with the min(key) starting at a given node. This node must not be the sentinel.
-	TreeNode<T>* min(TreeNode<T>& root, int &index) { 
+	TreeNode<T>* min(TreeNode<T>& root, int &index) {
 		index = root.rChild;
 		TreeNode<T>* nextNode = right(root);
 		if (nextNode == &tree[0]) return &root;
 
 		TreeNode<T>* trailingNode = &root;
-		
+
 		while (nextNode != &tree[0]) {				//As long as we haven't returned to the sentinel			
 			index = trailingNode->rChild;
-			trailingNode = nextNode;			
-			nextNode = left(*nextNode);			
+			trailingNode = nextNode;
+			nextNode = left(*nextNode);
 		}
 		return trailingNode;
 	}
@@ -122,7 +122,7 @@ public:
 		if (nextNode == &tree[0]) return &root;
 
 		TreeNode<T>* trailingNode = NULL;
-		
+
 		while (nextNode != &tree[0]) {				//As long as we haven't returned to the sentinel
 			trailingNode = nextNode;
 			nextNode = right(*nextNode);
@@ -138,7 +138,7 @@ public:
 	TreeNode<T>* search(int key) {
 		TreeNode<T>* nextNode = left(tree[0]);
 		while (nextNode != &tree[0]) {				//As long as we haven't returned to the sentinel
-			if (key == nextNode->key) return nextNode;			
+			if (key == nextNode->key) return nextNode;
 			if (key < nextNode->key) nextNode = left(*nextNode);
 			else nextNode = right(*nextNode);
 		}
@@ -168,7 +168,7 @@ public:
 		if (toDelete->rChild != 0) children[1]++;
 
 		TreeNode<T> *replacement = NULL;
-		
+
 		if (children[0]) {
 			if (children[1]) {	//left and right child
 				replacement = min(*toDelete, freeIndex);
@@ -189,16 +189,16 @@ public:
 				replacement->rChild = tree[0].rChild;					//Add child to be in free node chain
 			}
 		}
-		else if (children[1]){  //only right child
+		else if (children[1]) {  //only right child
 			replacement = right(*toDelete);
 			freeIndex = toDelete->rChild;
 			*toDelete = *replacement;									//Overwrite "deleted" node data with its child
 			replacement->lChild = replacement->key = 0;						//Zero-out child data to be that of free nodes
 			replacement->rChild = tree[0].rChild;					//Add child to be in free node chain
 		}
-		else{ 
+		else {
 			//It's leaf node. Is this leaf a right or left child?
-			if (left(*parentNode)->key == toDelete->key) {	
+			if (left(*parentNode)->key == toDelete->key) {
 				freeIndex = parentNode->lChild;			//deletedNode array index is now the new free index
 				parentNode->lChild = 0;					//deletedNode is no longer parent's child
 			}
@@ -215,7 +215,7 @@ public:
 
 	}
 
-	
+
 
 	TreeNode<T>* getRoot() {
 		return &tree[1];
@@ -230,25 +230,68 @@ public:
 		stack.push(node);										//push the first node.
 		while (!stack.PilaVacia()) {							//Meaningful for 2th and onwards iterations			
 			node = stack.pop();									//Obtain(POP) the data at top
-			output += to_string(node->key) + "\t";			     		//Store IT			
-			output += to_string(node->lChild) + "\t";			     		//Store IT
-			output += to_string(node->rChild) + "\t";			     		//Store IT
+			output += to_string(node->key) + "\t";				//Store IT			
+			output += to_string(node->lChild) + "\t";			//Store IT
+			output += to_string(node->rChild) + "\t";			//Store IT
 			output += node->data + "\t\n";			     		//Store IT
-			if (node->rChild!=0) stack.push(&tree[node->rChild]);
-			if (node->lChild!=0) stack.push(&tree[node->lChild]);
+			if (node->rChild != 0) stack.push(right(*node));
+			if (node->lChild != 0) stack.push(left(*node));
 		}
 		return output;
 	}
 
-	////Print the data, not the keys...
-	//std::string traversePostOrder(TreeNode<T>* node) {
+	//Print the data, not the keys...
+	std::string traversePostOrder(TreeNode<T>* node) {
+		if (!node) return "";
 
-	//}
+		Pila<TreeNode<T>*> stack;
+		std::string output;
+		TreeNode<T>* lastNode = NULL;
+		TreeNode<T>* peekNode = NULL;
+		while (!stack.PilaVacia() || node != &tree[0]) {
+			if (node != &tree[0]) {
+				stack.push(node);
+				node = left(*node);
+			}
+			else {
+				peekNode = stack.peek();
+				TreeNode<T>* aux = right(*peekNode);
+				if (aux != &tree[0] && lastNode != aux) node = aux;
+				else {
+					output += to_string(peekNode->key) + "\t";				//Store IT			
+					output += to_string(peekNode->lChild) + "\t";			//Store IT
+					output += to_string(peekNode->rChild) + "\t";			//Store IT
+					output += peekNode->data + "\t\n";			     		//Store IT
+					lastNode = stack.pop();
+				}
+			}
+		}
+		return output;
+	}
 
-	////Print the data, not the keys...
-	//std::string traverseInOrder(TreeNode<T>* node) {
-
-	//}
+	//Print the data, not the keys...
+	std::string traverseInOrder(TreeNode<T>* node) {
+		if (!node) return "";
+		Pila<TreeNode<T>*> stack;
+		std::string output;
+		TreeNode<T>* lastNode = NULL;
+		TreeNode<T>* peekNode = NULL;
+		while (!stack.PilaVacia() || node != &tree[0]) {
+			if (node != &tree[0]) {
+				stack.push(node);
+				node = left(*node);
+			}
+			else {
+				node = stack.pop();
+				output += to_string(node->key) + "\t";				//Store IT			
+				output += to_string(node->lChild) + "\t";			//Store IT
+				output += to_string(node->rChild) + "\t";			//Store IT
+				output += node->data + "\t\n";			     		//Store IT
+				node = right(*node);
+			}
+		}
+		return output;
+	}
 
 
 };

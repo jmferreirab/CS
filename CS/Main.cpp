@@ -6,12 +6,6 @@
 #include "Lists.h"
 using namespace std;
 
-//template <typename T>
-//void print(DoublyQueue<T> &queue) {
-//	for (int i = 1; i <= queue.size(); i++) cout << queue.get(i) << " ";
-//	cout << endl;
-//}
-
 void demoLinkedBST() {
 	cout << "\nDemostracion de Arbol Binario de Busqueda.\n\n";
 
@@ -29,19 +23,9 @@ void demoLinkedBST() {
 	cout << "\n";
 }
 
-
-int main() {
-
-	//ArrayBST<LinkedList<string>> arr;
+void arraryBSTDemo() {
 	int tam = 10;
 	ArrayBST<string> arr(tam);
-
-
-	LinkedList<string> l;
-	l.add_end("2323");
-	l.add_end("2323");
-	l.add_end("2323");
-	l.add_end("2323");
 
 	arr.insert(110, "A");
 	arr.insert(100, "B");
@@ -50,41 +34,58 @@ int main() {
 	arr.insert(40, "D");
 	arr.insert(30, "X");
 	arr.deleteNode(110);
-	arr.insert(31, "Z");
-	arr.insert(32, "D");
-	arr.insert(33, "Z");
-	arr.insert(34, "Z");
+	arr.insert(33, "Zeta");
 	arr.insert(35, "Z");
 	arr.insert(9, "W");
 	arr.deleteNode(9);
 	arr.insert(150, "Alfa");
-	arr.insert(160, "Alfa");
-	arr.insert(170, "Alfa");
+	arr.insert(160, "BETA");
+	arr.insert(170, "Gamma");
 
-	for (int i = 0; i <= tam; i++) {
-		cout << "/  " << arr.tree[i].key << " " << arr.tree[i].lChild << " " << arr.tree[i].rChild;
+	cout << "Array representation of binary tree [SIZE=SENTINEL + 10] using key:left:right \n\n";
+	for (int i = 0; i < tam+1; i++) {
+		cout << " / " << arr.getTree()[i].key << " "
+			<< arr.getTree()[i].lChild << " " << arr.getTree()[i].rChild;
 	}
 	cout << "\n\n";
 
-
-	//string s = arr.tree[1].data.get(3);
-	//cout << s;
-	//arr.tree[1].data.remove_last();
-	
-	//string s = arr.left(*arr.left(arr.tree[1]))->data;
-	//string p = arr.max(arr.tree[2])->data;
-	//string q = arr.search(25)->data;
-
 	ofstream of("out.txt");
-	string out = arr.traversePreorder(arr.getRoot()) + "\n";
+	string preOrder = "Preorder:\n" + arr.traversePreorder(arr.getRoot()) + "\n";
+	string postOrder = "Postorder:\n" + arr.traversePostOrder(arr.getRoot()) + "\n";
+	string inOrder = "Inorder:\n" + arr.traverseInOrder(arr.getRoot()) + "\n";
 
-	of << out;
-	cout << out;
+	of << preOrder;
+	cout << preOrder;
+	cout << postOrder;
+	cout << inOrder;
+}
 
-	//cout << s << "\t" << p;
-	//arr.tree[1].data.remove_last();
+
+//Reproduction rate 100%
+void readAccessViolationDemoDueToOmissionOfRuleOfThree(){
+	ArrayBST<LinkedList<string>> arr;
+	LinkedList<string> li;
+	li.add_end("123");
+	li.add_end("345");
+	li.add_end("456");
+	li.add_end("789");
+
+	arr.insert(110, li);
+	arr.insert(100, li);
+
+	string s = arr.getTree()[1].data.get(2);
+
+	cout << s;
+
+}
+
+
+int main() {
 
 	//demoLinkedBST();
+	arraryBSTDemo();
+	//readAccessViolationDemoDueToOmissionOfRuleOfThree();
+
 
 	cout << "\nPresione enter para terminar.    ";
 	cin.get();

@@ -38,14 +38,14 @@ public:
 	}
 
 	//Remove this and you will have a lot of problems. Rule of three:  https://stackoverflow.com/questions/23837303/access-violation-exception-thrown-on-delete-keyword
-	LinkedList<T> &operator=(LinkedList<T> src)
-		// pass by reference performs the copy
-	{
-		//this->_size = src._size;
-		std::swap(root, src.root); // now just swap the head of the copy 
-								   // for the head of the source
-		return *this;
-	}
+	//LinkedList<T> &operator=(LinkedList<T> src)
+	//	// pass by reference performs the copy
+	//{
+	//	//this->_size = src._size;
+	//	std::swap(root, src.root); // now just swap the head of the copy 
+	//							   // for the head of the source
+	//	return *this;
+	//}
 	
 	/*
 	Until the head is null,
